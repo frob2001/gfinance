@@ -1,3 +1,4 @@
+import os
 import psycopg2
 import psycopg2.extras
 from flask import Flask, render_template, request, redirect, url_for, session, flash
@@ -7,11 +8,11 @@ from functools import wraps
 app = Flask(__name__)
 
 # Asume que DATABASE_URL es tu cadena de conexión
-DATABASE_URL="postgresql://felipe:felipe@34.171.61.174:5432/postgres"
+DATABASE_URL = os.environ.get('DATABASE_URL')
+USERS_DATABASE_URL = os.environ.get('USERS_DATABASE_URL')
 
-USERS_DATABSE_URL ="postgresql://postgres:ghabitsdb12345@34.121.136.182:5432/postgres"
-
-app.secret_key = 'secreto'
+# Utiliza una variable de entorno para la clave secreta
+app.secret_key = os.environ.get('FLASK_SECRET_KEY')
 
 def login_required(f):
     @wraps(f)
