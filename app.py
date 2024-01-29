@@ -28,7 +28,7 @@ def get_db_connection():
     return conn
 
 def get_users_db_connection():
-    conn = psycopg2.connect(USERS_DATABSE_URL, cursor_factory=psycopg2.extras.DictCursor)
+    conn = psycopg2.connect(USERS_DATABASE_URL, cursor_factory=psycopg2.extras.DictCursor)
     return conn
 
 def format_datetime(value, format='%Y-%m-%d'):
