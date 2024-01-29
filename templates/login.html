@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <title>G-Finance Login</title>
+
+    <style>
+        body {
+            background-color: #f5f5f5;
+        }
+        .login-container {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .login-form {
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container" style="background-color: #0d1c23">
+        <div class="login-form">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/finance_logo.png') }}" alt="Logo" style="width: 80px; height:80px;">
+            </div>
+            <h2 class="text-center" style="color: #0d1c23;">G-Finance</h2>
+            <form action="/" method="post">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="alert alert-danger" role="alert">
+                        {{ messages[0] }}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="background-color: #0d1c23; border: none;">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+</body>
+</html>

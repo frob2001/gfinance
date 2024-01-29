@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<h2>Budgets</h2>
+<br>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div id="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createBudgetModal">Create Budget</button>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Amount</th>
+      <th>Start date</th>
+      <th>End date</th>
+      <th>Category</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for budget in budgets %}
+    <tr>
+      <td>{{ budget['name'] }}</td>
+      <td>{{ budget['amount'] }}</td>
+      <td>{{ budget['start_date'] | datetime }}</td>
+      <td>{{ budget['end_date'] | datetime }}</td>
+      <td>{{ budget['category'] }}</td>
+      <td>
+        <form action="{{ url_for('delete_budget', budget_id=budget['budget_id']) }}" method="post">
+          <button type="submit" class="btn btn-danger">X</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+
+<div class="modal fade" id="createBudgetModal" tabindex="-1" role="dialog" aria-labelledby="createBudgetModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createBudgetModalLabel">New Budget</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/create_budget" method="post">
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" class="form-control" id="name" name="name" step="0.01" required>
+              </div>
+            <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="number" class="form-control" id="amount" name="amount" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="start_date">Start date</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date">En date</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" required>
+            </div> 
+            <div class="form-group">
+                <label for="category">Category</label>
+                <select class="form-control" id="category" name="category" required>
+                    <option value="">Choose</option>
+                    {% for category in categories %}
+                    <option value="{{ category['name'] }}">{{ category['name'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Budget</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

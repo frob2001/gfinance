@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% block content %}
+<br>
+<h2>Financial goals</h2>
+<br>
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+    <div id="flash-messages">
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+{% endwith %}
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#createFinancialGoalModal">Create Financial Goal</button>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Description</th>
+      <th>Saved amount</th>
+      <th>Target amount</th>
+      <th>Due date</th>
+      <th>Progress</th> <!-- Añadir una columna para el progreso -->
+    </tr>
+  </thead>
+  <tbody>
+    {% for financial_goal in financial_goals %}
+    <tr>
+      <td>{{ financial_goal['name'] }}</td>
+      <td>{{ financial_goal['description'] }}</td>
+      <td>{{ financial_goal['saved_amount'] }}</td>
+      <td>{{ financial_goal['target_amount'] }}</td>
+      <td>{{ financial_goal['due_date'] | datetime }}</td>
+      <td>
+        {% set progress_percent = (financial_goal['saved_amount'] / financial_goal['target_amount']) * 100 %}
+        <div class="progress">
+          <div class="progress-bar" role="progressbar" style="width: {{ progress_percent }}%;" aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100">{{ progress_percent|round|int }}%</div>
+        </div>
+      </td>
+      <td>
+        <form action="{{ url_for('delete_financial_goal', goal_id=financial_goal['goal_id']) }}" method="post">
+          <button type="submit" class="btn btn-danger">X</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="modal fade" id="createFinancialGoalModal" tabindex="-1" role="dialog" aria-labelledby="createFinancialGoalModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="createFinancialGoalModalLabel">New Financial Goal</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form action="/create_financial_goal" method="post">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" class="form-control" id="name" name="name" step="0.01" required>
+            </div>
+            <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" name="description" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="saved_amount">Saved ammount</label>
+                <input type="number" class="form-control" id="saved_amount" name="saved_amount" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="target_amount">Target ammount</label>
+                <input type="number" class="form-control" id="target_amount" name="target_amount" step="0.01" required>
+            </div>
+            <div class="form-group">
+                <label for="due_date">Date</label>
+                <input type="date" class="form-control" id="due_date" name="due_date" required>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save Financial Goal</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
